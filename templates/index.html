@@ -1,0 +1,642 @@
+{% load static %}
+{% static "images" as baseUrl %}
+<!-- images is present in static folder &&  baseUrl act as variable -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PVRWebsite-HOME</title>
+  <!-- CSS only -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Merienda:wght@400;700&family=Open+Sans:wght@300&family=Poppins:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+  <style>
+    .availability-form {
+      margin-top: -50px;
+      z-index: 2;
+      position: relative;
+    }
+
+    @media screen and(max-width:575px) {
+      .availability-form {
+        margin-top: 25px;
+        padding: 0px 35px;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-light">
+  <nav class="navbar navbar-expand-lg bg-white px-lg-3 py-lg-2 shadow-sm sticky-top>
+    <div class=" container-fluid">
+    <a class="navbar-brand me-5 fw-bold fs-3 h-font" href="index.html">PVR Hotel</a>
+    <button class="navbar-toggler shadow-none" type="button" data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+      aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active me-3" aria-current="page" href="home">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link me-3" href="rooms">Rooms</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link me-3" href="facilities">Facilities</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link me-3" href="contactus">Contact Us</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="about">About Us</a>
+        </li>
+      </ul>
+      <div class="d-flex" role="search">
+        <!--<button class="btn btn-outline-success" type="submit">Search</button>-->
+        {% if user.is_authenticated %}
+        <li>Hello, {{user.first_name}}</li>
+        <button type="button" class="btn btn-outline-dark shadow-none">
+          <a href="accounts/logout" style="text-decoration: none; color:black">Logout</a>
+        </button>
+        {% else %}
+        <button type="button" class="btn btn-outline-dark shadow-none">
+          <a href="accounts/login" style="text-decoration: none; color:black">Login</a>
+        </button>
+        <button type="button" class="btn btn-outline-dark shadow-none">
+          <a href="accounts/register" style="text-decoration: none; color:black">Register</a>
+        </button>
+        {% endif %}
+      </div>
+    </div>
+    </div>
+  </nav>
+  <!-- Modal -->
+  <!--<div class="modal fade" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form action="">
+          <div class="modal-header">
+            <h5 class="modal-title d-flex align-items-center">
+              <i class="bi bi-person-circle fs-3 me-2"></i>User Login
+            </h5>
+            <button type="reset" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label">Email address</label>
+              <input type="email" class="form-control shadow-none">
+            </div>
+            <div class="mb-4">
+              <label class="form-label">Password</label>
+              <input type="password" class="form-control shadow-none">
+            </div>
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <button type="submit" class="" btn btn-dark shadow-none">Login</button>
+              <a href="javascript: void(0)" class="text-secondary  text-decoration-none">Forgot password?</a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div> 
+
+  <div class="modal fade" id="registerModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form action="">
+          <div class="modal-header">
+            <h5 class="modal-title d-flex align-items-center">
+              <i class="bi bi-person-lines-fill fs-3 me-2"></i>User Registration
+            </h5>
+            <button type="reset" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <span class="badge text-bg-light text-dark mb-3 text-wrap lh-base">
+              Note: Your details must match with Your ID(Aadhdar card, passport, driving license,etc.)
+              that will be required during check-in.
+            </span>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-6 ps-0 mb-3">
+                  <label class="form-label">Name</label>
+                  <input type="text" class="form-control shadow-none">
+                </div>
+                <div class="col-md-6 p-0 mb-3">
+                  <label class="form-label">Email</label>
+                  <input type="email" class="form-control shadow-none">
+                </div>
+                <div class="col-md-6 ps-0 mb-3">
+                  <label class="form-label">Phone no.</label>
+                  <input type="number" class="form-control shadow-none">
+                </div>
+                <div class="col-md-6 p-0 mb-3">
+                  <label class="form-label">Picture</label>
+                  <input type="file" class="form-control shadow-none">
+                </div>
+                <div class="col-md-12 p-0 mb-3">
+                  <label class="form-label">Address</label>
+                  <textarea class="form-control shadow-none" rows="1"></textarea>
+                </div>
+                <div class="col-md-6 ps-0 mb-3">
+                  <label class="form-label">PinCode</label>
+                  <input type="number" class="form-control shadow-none">
+                </div>
+                <div class="col-md-6 p-0 mb-3">
+                  <label class="form-label">Date of Birth</label>
+                  <input type="date" class="form-control shadow-none">
+                </div>
+                <div class="col-md-6 ps-0 mb-3">
+                  <label class="form-label">Password</label>
+                  <input type="password" class="form-control shadow-none">
+                </div>
+                <div class="col-md-6 p-0 mb-3">
+                  <label class="form-label">Confirm Password</label>
+                  <input type="password" class="form-control shadow-none">
+                </div>
+              </div>
+            </div>
+            <div class="text-center my-1">
+              <button type="submit" class="btn btn-dark shadow-none">Register</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div> -->
+  <!-- Carousel -->
+  <div class="container-fluid px-lg-4 mt-4">
+    <div class="swiper swiper-container">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide">
+          <img src="{% static 'images/carousel/1.png'  %}" >
+        </div>
+        <div class="swiper-slide">
+          <img src="{% static 'images/carousel/2.png'  %}">
+        </div>
+        <div class="swiper-slide">
+          <img src="{% static 'images/carousel/3.png'  %}">
+        </div>
+        <div class="swiper-slide">
+          <img src="{% static 'images/carousel/4.png'  %}">
+        </div>
+        <div class="swiper-slide">
+          <img src="{% static 'images/carousel/5.png'  %}">
+        </div>
+        <div class="swiper-slide">
+          <img src="{% static 'images/carousel/6.png'  %}">
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Check Availability form-->
+  <div class="container availability-form">
+    <div class="row">
+      <div class="col-lg-12 bg-white shadow p-4 rounded">
+        <h5 class="mb-4">Check Booking Availability</h5>
+        <form>
+          <div class="row align-items-end">
+            <div class="col-lg-3 mb-3">
+              <label class="form-label" style="font-weight:500">Check-in</label>
+              <input type="date" class="form-control shadow-none">
+            </div>
+            <div class="col-lg-3 mb-3">
+              <label class="form-label" style="font-weight:500">Check-out</label>
+              <input type="date" class="form-control shadow-none">
+            </div>
+            <div class="col-lg-3 mb-3">
+              <label class="form-label" style="font-weight:500">Adult</label>
+              <select class="form-select shadow-none">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="3">4</option>
+              </select>
+            </div>
+            <div class="col-lg-2 mb-3">
+              <label class="form-label" style="font-weight:500">Children</label>
+              <select class="form-select shadow-none">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="3">4</option>
+              </select>
+            </div>
+            <div class="col-lg-1  mb-lg-3 mt-2">
+              <button type="submit" class="btn text-white shadow-none custom-bg">Submit</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Our Rooms-->
+  <h3 class="my-5 fw-bold h-font text-center">Locations</h3>
+  <div class="container px-4">
+    <!-- Swiper -->
+    <div class="swiper mySwiper">
+      <div class="swiper-wrapper mb-5">
+        {% for loc in locs %}
+        <div class="swiper-slide bg-white text-center overflow-hidden rounded">
+          <a href="rooms" class="text-dark text-decoration-none">
+            <!-- <img src="{% static 'images/location_1.jpg' %}" alt="" width="w-10" height="250px">   -->
+            <!-- static command -->
+            <!-- <img src="{{baseUrl}}/{loc.img}" alt="">  -->
+            <img src="{{loc.img.url}}" width="w-10" height="250px">
+            <h5 class="mg-2">{{loc.name}}</h5>
+            <div class="location_subtitle">
+              <p>{{loc.desc}}</p>
+            </div>
+          </a>
+        </div>
+        <!-- <div class="swiper-slide bg-white text-center overflow-hidden rounded">
+                <a href="/website/templates/tabs/rooms.html" class="text-dark text-decoration-none">
+                  <img src="/website/static/images/locations/2.jpg" width="w-10" height="250px">
+                  <h5 class="mg-2">Agra</h5></a>
+              </div>
+              <div class="swiper-slide bg-white text-center overflow-hidden rounded">
+                <a href="/website/templates/tabs/rooms.html" class="text-dark text-decoration-none">
+                  <img src="/website/static/images/locations/3.jpg" width="w-10" height="250px">
+                  <h5 class="mg-2">Rajasthan</h5></a>
+              </div>
+              <div class="swiper-slide bg-white text-center overflow-hidden rounded">
+                <a href="/website/templates/tabs/rooms.html" class="text-dark text-decoration-none">
+                  <img src="/website/static/images/locations/4.jpg" width="w-10" height="250px">
+                  <h5 class="mg-2">Delhi</h5></a>
+              </div>
+              <div class="swiper-slide bg-white text-center overflow-hidden rounded">
+                <a href="/website/templates/tabs/rooms.html" class="text-dark text-decoration-none">
+                  <img src="/website/static/images/locations/5.jpg" width="w-10" height="250px">
+                  <h5 class="mg-2">Munnar</h5></a>
+              </div>
+              <div class="swiper-slide bg-white text-center overflow-hidden rounded">
+                <a href="/website/templates/tabs/rooms.html" class="text-dark text-decoration-none">
+                  <img src="/website/static/images/locations/6.jpg" width="w-10" height="250px">
+                  <h5 class="mg-2">Coorg</h5></a>
+              </div> -->
+        {% endfor %}
+      </div>
+      <div class="swiper-pagination"></div>
+    </div>
+
+    <!--<div class="container">
+    <div class="row">
+      <div class="col-lg-4 col-md-6 my-3">
+        <div class="card border-0 shadow" style="max-width: 350px; margin: auto;">
+          <img src="/website/static/images/rooms/1.jpg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5>Simple Room</h5>
+            <h6 clas="mb-4">₹200 per night</h6>
+            <div class="features mb-4">
+              <h6 class="mb-1">Features</h6>
+              <span class="badge text-bg-light text-dark text-wrap ">
+                2 Rooms
+              </span>
+              <span class="badge text-bg-light text-dark text-wrap ">
+                2 Bathroom
+              </span>
+              <span class="badge text-bg-light text-dark text-wrap ">
+                1 Balcony
+              </span>
+              <span class="badge text-bg-light text-dark text-wrap ">
+                3 Sofa's
+              </span>
+            </div>
+            <div class="facilities mb-4">
+              <h6 class="mb-1">Facilities</h6>
+              <span class="badge text-bg-light text-dark text-wrap ">
+                Room Heater
+              </span>
+              <span class="badge text-bg-light text-dark text-wrap ">
+                AC
+              </span>
+              <span class="badge text-bg-light text-dark text-wrap ">
+                Wifi
+              </span>
+              <span class="badge text-bg-light text-dark text-wrap ">
+                TV
+              </span>
+            </div>
+            <div class="guests mb-4">
+              <h6 class="mb-1">Guests</h6>
+              <span class="badge text-bg-light text-dark text-wrap ">
+                2 Adults
+              </span>
+              <span class="badge text-bg-light text-dark text-wrap ">
+                2 Children
+              </span>
+            </div>
+            <div class="rating mb-4">
+              <h6 class="mb-1">Rating</h6>
+              <span class="badge rounded-pill  bg-light">
+                <i class="bi bi-star-fill text-warning"></i>
+                <i class="bi bi-star-fill text-warning"></i>
+                <i class="bi bi-star-fill text-warning"></i>
+                <i class="bi bi-star-fill text-warning"></i>
+                <i class="bi bi-star-fill text-warning"></i>
+              </span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <a href="#" class="btn btn-sm text-white custom-bg shadow-none">Book Now</a>
+              <a href="#" class="btn btn-sm btn-outline-dark shadow-none">More details</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 my-3">
+        <div class="card border-0 shadow" style="max-width: 350px; margin: auto;">
+          <img src="/website/static/images/rooms/1.jpg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5>Double Room</h5>
+            <h6 clas="mb-4">₹200 per night</h6>
+            <div class="features mb-4">
+              <h6 class="mb-1">Features</h6>
+              <span class="badge text-bg-light text-dark text-wrap ">
+                2 Rooms
+              </span>
+              <span class="badge text-bg-light text-dark text-wrap ">
+                2 Bathroom
+              </span>
+              <span class="badge text-bg-light text-dark text-wrap ">
+                1 Balcony
+              </span>
+              <span class="badge text-bg-light text-dark text-wrap ">
+                3 Sofa's
+              </span>
+            </div>
+            <div class="facilities mb-4">
+              <h6 class="mb-1">Facilities</h6>
+              <span class="badge text-bg-light text-dark text-wrap ">
+                Room Heater
+              </span>
+              <span class="badge text-bg-light text-dark text-wrap ">
+                AC
+              </span>
+              <span class="badge text-bg-light text-dark text-wrap ">
+                Wifi
+              </span>
+              <span class="badge text-bg-light text-dark text-wrap ">
+                TV
+              </span>
+            </div>
+            <div class="guests mb-4">
+              <h6 class="mb-1">Guests</h6>
+              <span class="badge text-bg-light text-dark text-wrap ">
+                4 Adults
+              </span>
+              <span class="badge text-bg-light text-dark text-wrap ">
+                2 Children
+              </span>
+            </div>
+            <div class="rating mb-4">
+              <h6 class="mb-1">Rating</h6>
+              <span class="badge rounded-pill  bg-light">
+                <i class="bi bi-star-fill text-warning"></i>
+                <i class="bi bi-star-fill text-warning"></i>
+                <i class="bi bi-star-fill text-warning"></i>
+                <i class="bi bi-star-fill text-warning"></i>
+                <i class="bi bi-star-fill"></i>
+              </span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <a href="#" class="btn btn-sm text-white custom-bg shadow-none">Book Now</a>
+              <a href="#" class="btn btn-sm btn-outline-dark shadow-none">More details</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 my-3">
+        <div class="card border-0 shadow" style="max-width: 350px; margin: auto;">
+          <img src="/website/static/images/rooms/1.jpg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5>Deluxe room</h5>
+            <h6 clas="mb-4">₹200 per night</h6>
+            <div class="features mb-4">
+              <h6 class="mb-1">Features</h6>
+              <span class="badge text-bg-light text-dark text-wrap ">
+                2 Rooms
+              </span>
+              <span class="badge text-bg-light text-dark text-wrap ">
+                2 Bathroom
+              </span>
+              <span class="badge text-bg-light text-dark text-wrap ">
+                1 Balcony
+              </span>
+              <span class="badge text-bg-light text-dark text-wrap ">
+                3 Sofa's
+              </span>
+            </div>
+            <div class="facilities mb-4">
+              <h6 class="mb-1">Facilities</h6>
+              <span class="badge text-bg-light text-dark text-wrap ">
+                Room Heater
+              </span>
+              <span class="badge text-bg-light text-dark text-wrap ">
+                AC
+              </span>
+              <span class="badge text-bg-light text-dark text-wrap ">
+                Wifi
+              </span>
+              <span class="badge text-bg-light text-dark text-wrap ">
+                TV
+              </span>
+            </div>
+            <div class="guests mb-4">
+              <h6 class="mb-1">Guests</h6>
+              <span class="badge text-bg-light text-dark text-wrap ">
+                6 Adults
+              </span>
+              <span class="badge text-bg-light text-dark text-wrap ">
+                3 Children
+              </span>
+            </div>
+            <div class="rating mb-4">
+              <h6 class="mb-1">Rating</h6>
+              <span class="badge rounded-pill  bg-light">
+                <i class="bi bi-star-fill text-warning"></i>
+                <i class="bi bi-star-fill text-warning"></i>
+                <i class="bi bi-star-fill text-warning"></i>
+                <i class="bi bi-star-fill text-warning"></i>
+                <i class="bi bi-star-fill "></i>
+              </span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <a href="#" class="btn btn-sm text-white custom-bg shadow-none">Book Now</a>
+              <a href="#" class="btn btn-sm btn-outline-dark shadow-none">More details</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12 text-center mt-5">
+        <a href="#" class="btn btn-sm btn-outline-dark rounded-0 fw-bold shadow-none">More Rooms>>>>></a>
+      </div>
+    </div>
+  </div>
+  <!--Our Facilities-->
+    <h2 class="mt-5 pt-4 mb-4 text-center fw-bold h-font">Our Facilities</h2>
+    <div class="container">
+      <div class="row justify-content-evenly px-lg-0 px-md-0 px-5">
+        <div class="col-lg-2 col-md-2 text-center bg-white rounded shadow py-4  my-3">
+          <img src="static/images/facilities/wifi.svg" width="80px">
+          <h5 class>Wifi</h5>
+        </div>
+        <div class="col-lg-2 col-md-2 text-center bg-white rounded shadow py-4  my-3">
+          <img src="static/images/facilities/fire_safety.svg" width="80px">
+          <h5 class>Fire Safety</h5>
+        </div>
+        <div class="col-lg-2 col-md-2 text-center bg-white rounded shadow py-4  my-3">
+          <img src="static/images/facilities/tv.svg" width="80px">
+          <h5 class>Television</h5>
+        </div>
+        <div class="col-lg-2 col-md-2 text-center bg-white rounded shadow py-4  my-3">
+          <img src="static/images/facilities/massage.svg" width="80px">
+          <h5 class>Massage</h5>
+        </div>
+        <div class="col-lg-2 col-md-2 text-center bg-white rounded shadow py-4  my-3">
+          <img src="static/images/facilities/heater.svg" width="80px">
+          <h5 class>Heater</h5>
+        </div>
+        <div class="col-lg-2 col-md-2 text-center bg-white rounded shadow py-4  my-3">
+          <img src="static/images/facilities/ac.svg" width="80px">
+          <h5 class>AC</h5>
+        </div>
+        <div class="col-lg-12 text-center mt-5">
+          <a href="#" class="btn btn-sm btn-outline-dark rounded-0 fw-bold shadow-none">More Facilities >>>>></a>
+        </div>
+      </div>
+    </div>
+
+    <!--Our Testimonials-->
+    <!--<h2 class="mt-5 pt-4 mb-4 text-center fw-bold h-font">Testimonials</h2>-->
+
+    <!--Reach Us-->
+    <h2 class="mt-5 pt-4 mb-4 text-center fw-bold h-font">Reach Us</h2>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-8 p-4 mb-lg-0 mb-3 bg-white rounded">
+          <iframe class="w-100 rounded" height="320px"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3774.212543253533!2d72.83246561481948!3d18.921984087176476!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7d1c73a0d5cad%3A0xc70a25a7209c733c!2sGateway%20Of%20India%20Mumbai!5e0!3m2!1sen!2sin!4v1666881504909!5m2!1sen!2sin"
+            loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+        <div class="col-lg-4 col-md-4">
+          <div class="bg-white p-4 rounded mb-4">
+            <h5>CALL US</h5>
+            <a href="tel: +919626595668" class="d-inline-block mb-2 text-decoration-none text-dark">
+              <i class="bi bi-telephone-fill"></i> +919626595668
+            </a>
+            <br></br>
+            <a href="tel: +919626595668" class="d-inline-block text-decoration-none text-dark">
+              <i class="bi bi-telephone-fill"></i> +919626899668
+            </a>
+          </div>
+          <div class="bg-white p-4 rounded mb-4">
+            <h5>Follow US</h5>
+            <a href="#" class="d-inline-block mb-3">
+              <span class="badge bg-light text-dark fs-6 p-2">
+                <i class="bi bi-twitter me-1"></i> Twitter
+              </span>
+            </a>
+            <br>
+            <a href="#" class="d-inline-block mb-3">
+              <span class="badge bg-light text-dark fs-6 p-2">
+                <i class="bi bi-instagram me-1"></i> Instagram
+              </span>
+            </a>
+            <br>
+            <a href="#" class="d-inline-block">
+              <span class="badge bg-light text-dark fs-6 p-2">
+                <i class="bi bi-facebook me-1"></i> Facebook
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid bg-white mt-5">
+      <div class="row">
+        <div class="col-lg-4 p-4">
+          <h3 class="h-font fw-bold fs-3 mb-2">PVR Hotel</h3>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            Mollitia dolorum molestias temporibus voluptatem, esse fuga soluta doloremque nobis ea quos voluptatibus
+            debitis sed voluptate velit obcaecati voluptates voluptas amet? Quos.</p>
+        </div>
+        <div class="col-lg-4 p-4">
+          <h5 class="mb-3">Links</h5>
+          <a href="/website/templates/index.html" class="d-inline-block mb-2 text-dark text-decoration-none">Home</a>
+          <br>
+          <a href="/website/templates/tabs/rooms.html"
+            class="d-inline-block mb-2 text-dark text-decoration-none">Rooms</a> <br>
+          <a href="/website/templates/tabs/facilities.html"
+            class="d-inline-block mb-2 text-dark text-decoration-none">Facilities</a> <br>
+          <a href="/website/templates/tabs/contactus.html"
+            class="d-inline-block mb-2 text-dark text-decoration-none">Contact Us</a> <br>
+          <a href="/website/templates/tabs/about.html"
+            class="d-inline-block mb-2 text-dark text-decoration-none">About</a>
+        </div>
+        <div class="col-lg-4 p-4">
+          <h5 class="mb-3">Follow Us</h5>
+          <a href="#" class="d-inline-block text-dark text-decoration-none mb-2">
+            <i class="bi bi-twitter me-1"></i> Twitter</a> <br>
+          <a href="#" class="d-inline-block text-dark text-decoration-none mb-2">
+            <i class="bi bi-instagram me-1"></i> Instagram</a> <br>
+          <a href="#" class="d-inline-block text-dark text-decoration-none">
+            <i class="bi bi-facebook me-1"></i> Facebook</a> <br>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <h6 class="text-center bg-dark text-white p-3 m-0">CopyRight 2022 @SPIT</h6>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+  <script>
+    var swiper = new Swiper(".swiper-container", {
+      spaceBetween: 30,
+      effect: "fade",
+      loop: true,
+      autoplay: {
+        delay: 2500,
+        disableOnInteraction: false,
+      }
+    });
+    var swiper = new Swiper(".mySwiper", {
+      spaceBetween: 40,
+      pagination: {
+        el: ".swiper-pagination",
+      },
+      breakpoints: {
+        320: {
+          slidesPerView: 1,
+        },
+        640: {
+          slidesPerView: 1,
+        },
+        768: {
+          slidesPerView: 2,
+        },
+        1024: {
+          slidesPerView: 3,
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>
