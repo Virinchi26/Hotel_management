@@ -1,697 +1,246 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Rooms{% endblock %}
+{% static "images" as baseUrl %}
+<!-- images is present in static folder &&  baseUrl act as variable -->
+{% block head %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+<link
+    href="https://fonts.googleapis.com/css2?family=Merienda:wght@400;700&family=Open+Sans:wght@300&family=Poppins:wght@400;500;600&display=swap"
+    rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PVR Hotel-Rooms</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Merienda:wght@400;700&family=Open+Sans:wght@300&family=Poppins:wght@400;500;600&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
-    <link rel="stylesheet" href="css/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
+<link rel="stylesheet" href="{% static 'css/rooms.css'%}">
+
+{% endblock %}
+
+{% block content %}
+<!--Rooms-->
+<div class="my-5 px-4">
+    <h2 class="fw-bold h-font text-center">Rooms</h2>
+    <div class="h-line bg-dark"></div>
+    
+</div>
+<div class="container">
+    <div class="row"> 
+        <div class="d-flex justify-content-end">
+            <form action="{% url 'rooms' %}" method="get">
+                <div class="input-group mb-3" style="max-width: 210px;">
+                    <input type="text" class="form-control" name="location" placeholder="{% if location_query %}{{ location_query }}{% else %}Search{% endif %}" aria-label="Search" aria-describedby="search-button" value="{{ location_query }}">
+                    <button class="btn btn-primary custom-bg" type="submit" id="search-button">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        
+        <div class="col-lg-3 col-md-12 mb-lg-0 mb-4 px-lg-0">
+            <nav class="navbar navbar-expand-lg navbar-light bg-white rounded shadow">
+                <div class="container-fluid flex-lg-column align-items-stretch">
+                    <h4 class="mt-2">Filter</h4>
+                    <button class="navbar-toggler shadow-none" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#filterDropdown" aria-controls="filterDropdown" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse flex-column align-items-stretch mt-2" id="filterDropdown">
+                    <form action="" method="POST">
+                    {% csrf_token %}
+                        <div class="border bg-light p-3 rounded mb-3">
+                            <h5 class="mb-3" style="font-size: 18px;">Check Availability</h5>
+                            <label class="form-label">Check-in</label>
+                            <input type="date" name="checkindate" class="form-control shadow-none mb-3">
+                            <label class="form-label">Check-out</label>
+                            <input type="date" name="checkoutdate" class="form-control shadow-none">
+                        </div>
+                        <div class="border bg-light p-3 rounded mb-3">
+                            <h5 class="mb-3" style="font-size: 18px;">Facilities</h5>
+                            <div class="m-3">
+                                <div class="mb-2">
+                                <input type="checkbox" id="f1" name="roomheater" class="form-check-input shadow-none me-2" {% if roomheater %}checked{% endif %}>
+                                <label class="form-check-label" for="f1">Room Heater</label>
+                            </div>
+                            <div class="mb-2">
+                                <input type="checkbox" id="f2" name="ac" class="form-check-input shadow-none me-2" {% if ac %}checked{% endif %}>
+                                <label class="form-check-label" for="f2">AC</label>
+                            </div>
+                            <div class="mb-2">
+                                <input type="checkbox" id="fs-3" name="wifi" class="form-check-input shadow-none me-2" {% if wifi %}checked{% endif %}>
+                                <label class="form-check-label" for="fs-3">Wifi</label>
+                            </div>
+                            <div class="mb-2">
+                                <input type="checkbox" id="fs-3" name="tv"  class="form-check-input shadow-none me-2" {% if tv %}checked{% endif %}>
+                                <label class="form-check-label" for="fs-3">TV</label>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="border bg-light p-3 rounded mb-3">
+                            <h5 class="mb-3" style="font-size: 18px;">Guests</h5>
+                            <div class="d-flex">
+                                <div class="me-3">
+                                    <label class="form-label">Adults</label>
+                                    <input type="number" name="adults" class="form-control shadow-none">
+                                </div>
+                                <div>
+                                    <label class="form-label">Children</label>
+                                    <input type="number" name="children"  class="form-control shadow-none">
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary custom-bg w-100"
+                            style="margin-left: 1px; margin-bottom: 5px; border-radius:5px;" data-bs-toggle="modal"
+                            data-bs-target="#addModal">
+                            Apply
+                        </button>
+                    </form>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+
+        <div class="col-lg-9 col-md-12 px-4">
+            {% for room in room_page %}
+            <div class="card mb-4 border-0 shadow">
+                <div class="row g-0 p-3 align-items-center">
+                    <div class="col-md-5 mb-lg-0 mb-md-0 mb-3">
+                        <img src="{{ room.image_url.url }}" class="img-fluid rounded" alt="{{ room.name }}">
+                    </div>
+                    <div class="col-md-5 px-lg-3 px-md-3 px-0">
+                        <h5 class="mb-3">{{ room.name }}</h5>
+                        <div class="features mb-3">
+                            <h6 class="mb-1">Features</h6>
+                            <span class="badge text-bg-light text-dark text-wrap">Rooms: {{ room.rooms }}</span>
+                            <span class="badge text-bg-light text-dark text-wrap">Bathrooms: {{ room.bathrooms }}</span>
+                            <span class="badge text-bg-light text-dark text-wrap">Balcony: {{ room.balcony }}</span>
+                            <span class="badge text-bg-light text-dark text-wrap">Sofas: {{ room.sofa }}</span>
+                        </div>
+                        <div class="facilities mb-4">
+                            <h6 class="mb-1">Facilities</h6>
+                            {% if room.room_heater %}
+                                <span class="badge text-bg-light text-dark text-wrap">Room Heater</span>
+                            {% endif %}
+                            {% if room.ac %}
+                                <span class="badge text-bg-light text-dark text-wrap">AC</span>
+                            {% endif %}
+                            {% if room.wifi %}
+                                <span class="badge text-bg-light text-dark text-wrap">Wifi</span>
+                            {% endif %}
+                            {% if room.tv %}
+                                <span class="badge text-bg-light text-dark text-wrap">TV</span>
+                            {% endif %}
+                        </div>
+                        <div class="guests">
+                            <h6 class="mb-1">Guests</h6>
+                            <span class="badge text-bg-light text-dark text-wrap">Adults: {{ room.adults }}</span>
+                            <span class="badge text-bg-light text-dark text-wrap">Children: {{ room.children }}</span>
+                        </div>
+                        
+                    </div>
+                    <div class="col-md-2 mt-lg-0 mt-md-0 mt-4 text-center">
+                        <h6 class="mb-4">₹{{ room.price_per_night }} per night</h6>
+                        <!-- Add your "Book Now" button and modal here -->
+                        <button type="button" class="btn btn-primary custom-bg w-100" style="margin-left: 1px; margin-bottom: 5px; border-radius: 5px;" data-bs-toggle="modal" data-bs-target="#addModal">
+                            Book Now
+                        </button>
+                        <button type="button" class="btn btn-primary custom-bg w-100 mt-3" data-bs-toggle="collapse" data-bs-target="#roomDetails{{ room.id }}">
+                            More Details
+                        </button>
+                        
+                    </div>
+                </div>
+                <!-- More Details Collapse Section -->
+                <div class="collapse" id="roomDetails{{ room.id }}">
+                    <div class="row g-0 mt-4">
+                        <!-- Room Images (you can loop through room images here) -->
+                        <div class="col-md-6">
+                            <img src="{{ room.image_url.url }}" class="img-fluid rounded" alt="{{ room.name }}">
+                            <!-- Add more room images here -->
+                        </div>
+                        <!-- Room Ratings -->
+                        <div class="col-md-6">
+                            <h6>Room Ratings</h6>
+                            <!-- Add room ratings here -->
+                            <p>Rating: {{ room.rating }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="row">
+            <div class="col text-center">
+                <ul class="pagination">
+                    {% if room_page.has_previous %}
+                        <li class="page-item">
+                            <a href="?page={{ room_page.previous_page_number }}" class="page-link" aria-label="Previous">
+                                <span aria-hidden="true">&lt; Page {{ room_page.previous_page_number }}</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    
+                    {% if room_page.has_next %}
+                        <li class="page-item">
+                            <a href="?page={{ room_page.next_page_number }}" class="page-link" aria-label="Next">
+                                <span aria-hidden="true">Page {{ room_page.next_page_number }} &gt;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+            </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
     <script>
-        $(function () {
-            $('#footer').load('../../static/reusefooter.html');
+        const searchButton = document.getElementById("search-button");
+    
+        searchButton.addEventListener("click", function() {
+            // Change the button color to green
+            searchButton.classList.remove("btn-primary");
+            searchButton.classList.add("btn-success");
         });
     </script>
-    <style>
-        @media screen and(max-width:575px) {
-            .availability-form {
-                margin-top: 25px;
-                padding: 0px 35px;
-            }
-        }
+    <script>
+        $(document).ready(function () {
+            $(".owl-carousel").owlCarousel({
+                loop: true,
+                margin: 10,
+                responsiveClass: true,
+                responsive: {
+                    0: {
+                        items: 1,
+                        nav: true
+                    },
+                    600: {
+                        items: 3,
+                        nav: false
+                    },
+                    1000: {
+                        items: 5,
+                        nav: true,
+                        loop: false
+                    }
+                }
+            });
+        });
+    </script>
 
-        .custom-bg {
-            background-color: #2ec1ac;
-            border-color: #2ec1ac;
-        }
+    
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
-        .custom-bg:hover {
-            background-color: #279e8c;
-            border-color: #279e8c;
-        }
 
-        .availability-form {
-            margin-top: -50px;
-            z-index: 2;
-            position: relative;
-        }
-
-        .h-line {
-            width: 150px;
-            margin: 0 auto;
-            height: 1.7px;
-        }
-    </style>
-</head>
-
-<body>
-    <!--Header-->
-    <nav class="navbar navbar-expand-lg bg-white px-lg-3 py-lg-2 shadow-sm sticky-top>
-        <div class=" container-fluid">
-        <a class="navbar-brand me-5 fw-bold fs-3 h-font" href="index.html">PVR Hotel</a>
-        <button class="navbar-toggler shadow-none" type="button" data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-            aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                  <a class="nav-link active me-3" aria-current="page" href="home">Home</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link me-3" href="rooms">Rooms</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link me-3" href="facilities">Facilities</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link me-3" href="contactus">Contact Us</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="about">About Us</a>
-                </li>
-              </ul>
-            <div class="d-flex" role="search">
-                <!--<button class="btn btn-outline-success" type="submit">Search</button>-->
-                <button type="button" class="btn btn-outline-dark shadow-none me-lg-3 me-2" data-bs-toggle="modal"
-                    data-bs-target="#loginModal">
-                    Login
-                </button>
-                <button type="button" class="btn btn-outline-dark shadow-none" data-bs-toggle="modal"
-                    data-bs-target="#registerModal">
-                    Register
-                </button>
-            </div>
-        </div>
-        </div>
-    </nav>
-    <!-- Modal -->
-    <div class="modal fade" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form action="">
-                    <div class="modal-header">
-                        <h5 class="modal-title d-flex align-items-center">
-                            <i class="bi bi-person-circle fs-3 me-2"></i>User Login
-                        </h5>
-                        <button type="reset" class="btn-close shadow-none" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label class="form-label">Email address</label>
-                            <input type="email" class="form-control shadow-none">
-                        </div>
-                        <div class="mb-4">
-                            <label class="form-label">Password</label>
-                            <input type="password" class="form-control shadow-none">
-                        </div>
-                        <div class="d-flex align-items-center justify-content-between mb-2">
-                            <button type="submit" class="" btn btn-dark shadow-none">Login</button>
-                            <a href="javascript: void(0)" class="text-secondary  text-decoration-none">Forgot
-                                password?</a>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="registerModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <form action="">
-                    <div class="modal-header">
-                        <h5 class="modal-title d-flex align-items-center">
-                            <i class="bi bi-person-lines-fill fs-3 me-2"></i>User Registration
-                        </h5>
-                        <button type="reset" class="btn-close shadow-none" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <span class="badge text-bg-light text-dark mb-3 text-wrap lh-base">
-                            Note: Your details must match with Your ID(Aadhdar card, passport, driving license,etc.)
-                            that will be required during check-in.
-                        </span>
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-md-6 ps-0 mb-3">
-                                    <label class="form-label">Name</label>
-                                    <input type="text" class="form-control shadow-none">
-                                </div>
-                                <div class="col-md-6 p-0 mb-3">
-                                    <label class="form-label">Email</label>
-                                    <input type="email" class="form-control shadow-none">
-                                </div>
-                                <div class="col-md-6 ps-0 mb-3">
-                                    <label class="form-label">Phone no.</label>
-                                    <input type="number" class="form-control shadow-none">
-                                </div>
-                                <div class="col-md-6 p-0 mb-3">
-                                    <label class="form-label">Picture</label>
-                                    <input type="file" class="form-control shadow-none">
-                                </div>
-                                <div class="col-md-12 p-0 mb-3">
-                                    <label class="form-label">Address</label>
-                                    <textarea class="form-control shadow-none" rows="1"></textarea>
-                                </div>
-                                <div class="col-md-6 ps-0 mb-3">
-                                    <label class="form-label">PinCode</label>
-                                    <input type="number" class="form-control shadow-none">
-                                </div>
-                                <div class="col-md-6 p-0 mb-3">
-                                    <label class="form-label">Date of Birth</label>
-                                    <input type="date" class="form-control shadow-none">
-                                </div>
-                                <div class="col-md-6 ps-0 mb-3">
-                                    <label class="form-label">Password</label>
-                                    <input type="password" class="form-control shadow-none">
-                                </div>
-                                <div class="col-md-6 p-0 mb-3">
-                                    <label class="form-label">Confirm Password</label>
-                                    <input type="password" class="form-control shadow-none">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="text-center my-1">
-                            <button type="submit" class="btn btn-dark shadow-none">Register</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!--Rooms-->
-    <div class="my-5 px-4">
-        <h2 class="fw-bold h-font text-center">Our Rooms</h2>
-        <div class="h-line bg-dark"></div>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-3 col-md-12 mb-lg-0 mb-4 px-lg-0">
-                <nav class="navbar navbar-expand-lg navbar-light bg-white rounded shadow">
-                    <div class="container-fluid flex-lg-column align-items-stretch">
-                        <h4 class="mt-2">Filter</h4>
-                        <button class="navbar-toggler shadow-none" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#filterDropdown" aria-controls="filterDropdown" aria-expanded="false"
-                            aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <div class="collapse navbar-collapse flex-column align-items-stretch mt-2" id="filterDropdown">
-                            <div class="border bg-light p-3 rounded mb-3">
-                                <h5 class="mb-3" style="font-size: 18px;">Check Availability</h5>
-                                <label class="form-label">Check-in</label>
-                                <input type="date" class="form-control shadow-none mb-3">
-                                <label class="form-label">Check-out</label>
-                                <input type="date" class="form-control shadow-none">
-                            </div>
-                            <div class="border bg-light p-3 rounded mb-3">
-                                <h5 class="mb-3" style="font-size: 18px;">Facilities</h5>
-                                <div class="mb-2">
-                                    <input type="checkbox" id="f1" class="form-check-input shadow-none me-2">
-                                    <label class="form-check-label" for="f1">Facility 1</label>
-                                </div>
-                                <div class="mb-2">
-                                    <input type="checkbox" id="f2" class="form-check-input shadow-none me-2">
-                                    <label class="form-check-label" for="f2">Facility 2</label>
-                                </div>
-                                <div class="mb-2">
-                                    <input type="checkbox" id="fs-3" class="form-check-input shadow-none me-2">
-                                    <label class="form-check-label" for="fs-3">Facility 3</label>
-                                </div>
-                            </div>
-                            <div class="border bg-light p-3 rounded mb-3">
-                                <h5 class="mb-3" style="font-size: 18px;">Guests</h5>
-                                <div class="d-flex">
-                                    <div class="me-3">
-                                        <label class="form-label">Adults</label>
-                                        <input type="number" class="form-control shadow-none">
-                                    </div>
-                                    <div>
-                                        <label class="form-label">Children</label>
-                                        <input type="number" class="form-control shadow-none">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </nav>
-            </div>
-            <div class="col-lg-9 col-md-12 px-4">
-                <div class="card mb-4 border-0 shadow">
-                    <div class="row g-0 p-3 align-items-center">
-                        <div class="col-md-5 mb-lg-0 mb-md-0 mb-3">
-                            <img src="/website/static/images/rooms/1.jpg" class="img-fluid rounded">
-                        </div>
-                        <div class="col-md-5 px-lg-3 px-md-3 px-0">
-                            <h5 class="mb-3">Simple Room</h5>
-                            <div class="features mb-3">
-                                <h6 class="mb-1">Features</h6>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    2 Rooms
-                                </span>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    2 Bathroom
-                                </span>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    1 Balcony
-                                </span>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    3 Sofa's
-                                </span>
-                            </div>
-                            <div class="facilities mb-4">
-                                <h6 class="mb-1">Facilities</h6>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    Room Heater
-                                </span>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    AC
-                                </span>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    Wifi
-                                </span>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    TV
-                                </span>
-                            </div>
-                            <div class="guests">
-                                <h6 class="mb-1">Guests</h6>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    2 Adults
-                                </span>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    2 Children
-                                </span>
-                            </div>
-                        </div>
-                        <div class="col-md-2 mt-lg-0 mt-lg-0 mt-4 text-center">
-                            <h6 clas="mb-4">₹200 per night</h6>
-                            <button type="button" class="btn btn-primary custom-bg w-100"
-                                style="margin-left: 1px; margin-bottom: 5px; border-radius:5px;" data-bs-toggle="modal"
-                                data-bs-target="#addModal">
-                                Book Now
-                            </button>
-                            <!-- Modal -->
-                            <div class="modal fade" id="addModal" tabindex="-1">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h4 class="modal-title">Details</h4>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body" style="text-align: left;">
-                                            <!-- add patient form -->
-                                            <form method="POST">
-                                                <div class="mb-3">
-                                                    <label for="name" class="form-label">First Name</label>
-                                                    <input type="text" class="form-control" id="name" name="fname"
-                                                        required>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="name" class="form-label">Last Name</label>
-                                                    <input type="text" class="form-control" id="name" name="lname"
-                                                        required>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="email" class="form-label">Email</label>
-                                                    <input type="email" class="form-control" id="email" name="email"
-                                                        required>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="cars">Select type of Room :</label>
-                                                    <select name="roomType" id="roomType" class="bg-white"
-                                                        style="border-radius: 5px; margin-left: 10px;">
-                                                        <option value="simple">Simple</option>
-                                                        <option value="double">Double</option>
-                                                        <option value="deluxe">Deluxe</option>
-                                                        <option value="honeymoon">Honeymoon</option>
-                                                    </select>
-                                                </div>
-                                                <button type="submit" class="btn btn-success"
-                                                    style="border-radius:15px;">Submit</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card mb-4 border-0 shadow">
-                    <div class="row g-0 p-3 align-items-center">
-                        <div class="col-md-5 mb-lg-0 mb-md-0 mb-3">
-                            <img src="/website/static/images/rooms/1.jpg" class="img-fluid rounded">
-                        </div>
-                        <div class="col-md-5 px-lg-3 px-md-3 px-0">
-                            <h5 class="mb-3">Double Room</h5>
-                            <div class="features mb-3">
-                                <h6 class="mb-1">Features</h6>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    2 Rooms
-                                </span>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    2 Bathroom
-                                </span>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    1 Balcony
-                                </span>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    3 Sofa's
-                                </span>
-                            </div>
-                            <div class="facilities mb-4">
-                                <h6 class="mb-1">Facilities</h6>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    Room Heater
-                                </span>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    AC
-                                </span>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    Wifi
-                                </span>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    TV
-                                </span>
-                            </div>
-                            <div class="guests">
-                                <h6 class="mb-1">Guests</h6>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    2 Adults
-                                </span>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    2 Children
-                                </span>
-                            </div>
-                        </div>
-                        <div class="col-md-2 mt-lg-0 mt-lg-0 mt-4 text-center">
-                            <h6 clas="mb-4">₹200 per night</h6>
-                            <button type="button" class="btn btn-primary custom-bg w-100"
-                                style="margin-left: 1px; margin-bottom: 5px; border-radius:5px;" data-bs-toggle="modal"
-                                data-bs-target="#addModal">
-                                Book Now
-                            </button>
-                            <!-- Modal -->
-                            <div class="modal fade" id="addModal" tabindex="-1">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h4 class="modal-title">Details</h4>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body" style="text-align: left;">
-                                            <!-- add patient form -->
-                                            <form method="POST" >
-                                                <div class="mb-3">
-                                                    <label for="name" class="form-label">First Name</label>
-                                                    <input type="text" class="form-control" id="name" name="fname"
-                                                        required>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="name" class="form-label">Last Name</label>
-                                                    <input type="text" class="form-control" id="name" name="lname"
-                                                        required>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="email" class="form-label">Email</label>
-                                                    <input type="email" class="form-control" id="email" name="email"
-                                                        required>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="cars">Select type of Room :</label>
-                                                    <select name="roomType" id="roomType" class="bg-white"
-                                                        style="border-radius: 5px; margin-left: 10px;">
-                                                        <option value="double">Double</option>
-                                                        <option value="simple">Simple</option>
-                                                        <option value="deluxe">Deluxe</option>
-                                                        <option value="honeymoon">Honeymoon</option>
-                                                    </select>
-                                                </div>
-                                                <button type="submit" class="btn btn-success"
-                                                    style="border-radius:15px;">Submit</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card mb-4 border-0 shadow">
-                    <div class="row g-0 p-3 align-items-center">
-                        <div class="col-md-5 mb-lg-0 mb-md-0 mb-3">
-                            <img src="/website/static/images/rooms/1.jpg" class="img-fluid rounded">
-                        </div>
-                        <div class="col-md-5 px-lg-3 px-md-3 px-0">
-                            <h5 class="mb-3">Deluxe Room</h5>
-                            <div class="features mb-3">
-                                <h6 class="mb-1">Features</h6>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    2 Rooms
-                                </span>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    2 Bathroom
-                                </span>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    1 Balcony
-                                </span>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    3 Sofa's
-                                </span>
-                            </div>
-                            <div class="facilities mb-4">
-                                <h6 class="mb-1">Facilities</h6>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    Room Heater
-                                </span>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    AC
-                                </span>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    Wifi
-                                </span>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    TV
-                                </span>
-                            </div>
-                            <div class="guests">
-                                <h6 class="mb-1">Guests</h6>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    2 Adults
-                                </span>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    2 Children
-                                </span>
-                            </div>
-                        </div>
-                        <div class="col-md-2 mt-lg-0 mt-lg-0 mt-4 text-center">
-                            <h6 clas="mb-4">₹200 per night</h6>
-                            <button type="button" class="btn btn-primary custom-bg w-100"
-                                style="margin-left: 1px; margin-bottom: 5px; border-radius:5px;" data-bs-toggle="modal"
-                                data-bs-target="#addModal">
-                                Book Now
-                            </button>
-                            <!-- Modal -->
-                            <div class="modal fade" id="addModal" tabindex="-1">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h4 class="modal-title">Details</h4>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body" style="text-align: left;">
-                                            <!-- add patient form -->
-                                            <form method="POST">
-                                                <div class="mb-3">
-                                                    <label for="name" class="form-label">First Name</label>
-                                                    <input type="text" class="form-control" id="name" name="fname"
-                                                        required>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="name" class="form-label">Last Name</label>
-                                                    <input type="text" class="form-control" id="name" name="lname"
-                                                        required>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="email" class="form-label">Email</label>
-                                                    <input type="email" class="form-control" id="email" name="email"
-                                                        required>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="cars">Select type of Room :</label>
-                                                    <select name="roomType" id="roomType" class="bg-white"
-                                                        style="border-radius: 5px; margin-left: 10px;">
-                                                        <option value="deluxe">Deluxe</option>
-                                                        <option value="simple">Simple</option>
-                                                        <option value="double">Double</option>
-                                                        <option value="honeymoon">Honeymoon</option>
-                                                    </select>
-                                                </div>
-                                                <button type="submit" class="btn btn-success"
-                                                    style="border-radius:15px;">Submit</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card mb-4 border-0 shadow">
-                    <div class="row g-0 p-3 align-items-center">
-                        <div class="col-md-5 mb-lg-0 mb-md-0 mb-3">
-                            <img src="/website/static/images/rooms/1.jpg" class="img-fluid rounded">
-                        </div>
-                        <div class="col-md-5 px-lg-3 px-md-3 px-0">
-                            <h5 class="mb-3">Honeymoon Suite</h5>
-                            <div class="features mb-3">
-                                <h6 class="mb-1">Features</h6>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    2 Rooms
-                                </span>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    2 Bathroom
-                                </span>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    1 Balcony
-                                </span>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    3 Sofa's
-                                </span>
-                            </div>
-                            <div class="facilities mb-4">
-                                <h6 class="mb-1">Facilities</h6>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    Room Heater
-                                </span>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    AC
-                                </span>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    Wifi
-                                </span>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    TV
-                                </span>
-                            </div>
-                            <div class="guests">
-                                <h6 class="mb-1">Guests</h6>
-                                <span class="badge text-bg-light text-dark text-wrap ">
-                                    2 Adults
-                                </span>
-                            </div>
-                        </div>
-                        <div class="col-md-2 mt-lg-0 mt-lg-0 mt-4 text-center">
-                            <h6 clas="mb-4">₹200 per night</h6>
-                            <button type="button" class="btn btn-primary custom-bg w-100"
-                                style="margin-left: 1px; margin-bottom: 5px; border-radius:5px;" data-bs-toggle="modal"
-                                data-bs-target="#addModal">
-                                Book Now
-                            </button>
-                            <!-- Modal -->
-                            <div class="modal fade" id="addModal" tabindex="-1">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h4 class="modal-title">Details</h4>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body" style="text-align: left;">
-                                            <!-- add patient form -->
-                                            <form method="POST">
-                                                <div class="mb-3">
-                                                    <label for="name" class="form-label">First Name</label>
-                                                    <input type="text" class="form-control" id="name" name="fname"
-                                                        required>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="name" class="form-label">Last Name</label>
-                                                    <input type="text" class="form-control" id="name" name="lname"
-                                                        required>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="email" class="form-label">Email</label>
-                                                    <input type="email" class="form-control" id="email" name="email"
-                                                        required>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="cars">Select type of Room :</label>
-                                                    <select name="roomType" id="roomType" class="bg-white"
-                                                        style="border-radius: 5px; margin-left: 10px;">
-                                                        <option value="honeymoon">Honeymoon</option>
-                                                        <option value="simple">Simple</option>
-                                                        <option value="double">Double</option>
-                                                        <option value="deluxe">Deluxe</option>
-                                                    </select>
-                                                </div>
-                                                <button type="submit" class="btn btn-success"
-                                                    style="border-radius:15px;">Submit</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <!--Footer-->
-    <div class="container-fluid bg-white mt-5">
-        <div class="row">
-            <div class="col-lg-4 p-4">
-                <h3 class="h-font fw-bold fs-3 mb-2">PVR Hotel</h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Mollitia dolorum molestias temporibus voluptatem, esse fuga soluta doloremque nobis ea quos
-                    voluptatibus
-                    debitis sed voluptate velit obcaecati voluptates voluptas amet? Quos.</p>
-            </div>
-            <div class="col-lg-4 p-4">
-                <h5 class="mb-3">Links</h5>
-                <a href="/website/templates/index.html"
-                    class="d-inline-block mb-2 text-dark text-decoration-none">Home</a> <br>
-                <a href="/website/templates/tabs/rooms.html"
-                    class="d-inline-block mb-2 text-dark text-decoration-none">Rooms</a> <br>
-                <a href="/website/templates/tabs/facilities.html"
-                    class="d-inline-block mb-2 text-dark text-decoration-none">Facilities</a> <br>
-                <a href="/website/templates/tabs/contactus.html"
-                    class="d-inline-block mb-2 text-dark text-decoration-none">Contact Us</a> <br>
-                <a href="/website/templates/tabs/about.html"
-                    class="d-inline-block mb-2 text-dark text-decoration-none">About</a>
-            </div>
-            <div class="col-lg-4 p-4">
-                <h5 class="mb-3">Follow Us</h5>
-                <a href="#" class="d-inline-block text-dark text-decoration-none mb-2">
-                    <i class="bi bi-twitter me-1"></i> Twitter</a> <br>
-                <a href="#" class="d-inline-block text-dark text-decoration-none mb-2">
-                    <i class="bi bi-instagram me-1"></i> Instagram</a> <br>
-                <a href="#" class="d-inline-block text-dark text-decoration-none">
-                    <i class="bi bi-facebook me-1"></i> Facebook</a> <br>
-            </div>
-        </div>
-    </div>
-</body>
-
-</html>
+{% endblock %}

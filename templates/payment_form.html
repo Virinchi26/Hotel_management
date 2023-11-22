@@ -1,0 +1,16 @@
+<!-- payment_form.html -->
+
+<form action="{% url 'payment' %}" method="post">
+    {% csrf_token %}
+    <script
+      src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+      data-key="{{ stripe_public_key }}"
+      data-amount="1000"
+      data-name="Hotel Booking"
+      data-description="Payment for hotel booking"
+      data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+      data-locale="auto"
+      data-currency="usd">
+    </script>
+  </form>
+  

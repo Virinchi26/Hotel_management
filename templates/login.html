@@ -1,42 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login Page</title>
-    <style>
-        div.login-form{
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%,-50%);
-            width: 40%;
-        }
-    </style>
-</head>
-<body class="bg-light">
-    <div class="login-form text-center rounded bg-white shadow overflow-hidden">
-        <form method="POST">
-            {% csrf_token %}
-            <h4 class="bg-dark text-white py-3">Admin Login Panel</h4>
-            <div class="p-4">
-                <div class="mb-3">
-                    <input type="text" required class="form-control shadow-none text-center" name="username" placeholder="UserName"><br>
-                <div class="mb-4">
-                    <input type="password" class="form-control shadow-none text-center" name="password" placeholder="Password"><br>
-                </div>
-                <button name="login" type="submit" class="btn text-white custom-bg shadow-none" >LOGIN </button>
+{% block title %}Login{% endblock %}
 
-            </div>
-            <div>
-                {% for message in messages %}
-                <h3>{{message}}</h3>
-                {% endfor %}
-            </div>
-        </form>
-    </div>
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
 
-</body>
-</html>
+{% block content %}
+
+<div class="container1">
+  <div class="container2">
+    <h2>Login</h2>
+    <form method="post" class="c">
+      {% csrf_token %}
+      <div style="margin-top: 20px;">
+
+        {{ form.username.label_tag }}
+        <br>      
+        {{ form.username }}
+      </div>
+            
+        <br>
+        <div style="margin-top: 1px;">
+          {{ form.password.label_tag }}
+            <br>
+            {{ form.password }}
+        </div>
+            <br>
+      <button class="login-button" type="submit">Login</button>
+    </form>
+    <div class="or-divider">
+      <div></div>
+      <div class="or-text">OR</div>
+      <div></div>
+  </div>
+
+  <button class="google-login-button">
+    <img src="{% static 'images/google.png' %}" alt="Google Logo" class="google-logo">
+    Login with Google
+</button>
+  </div>
+  
+  <div class="container3">
+     <!-- add lottie animation in html  -->
+    <lottie-player src="{% static 'animations\login.json' %}" background="transparent" speed="1"
+      style="width: 70%; height: 50%;" loop autoplay></lottie-player>
+
+  </div> 
+
+</div>
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.4/lottie.min.js"></script>
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+{% endblock %}

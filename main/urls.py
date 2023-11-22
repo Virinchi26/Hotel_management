@@ -23,6 +23,8 @@ urlpatterns = [
     path('',include('hotel_management.urls')),
     path('accounts/',include('accounts.urls')),
     path('admin/', admin.site.urls),
+    path('weather/', include('weather.urls')),
+    path('news/', include('news.urls')),
 ]
 
 # adding media files

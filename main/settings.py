@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'weather',
+    'news',
 ]
 
 MIDDLEWARE = [
@@ -131,3 +133,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# settings.py
+
+STRIPE_PUBLIC_KEY = 'pk_test_51O3ACbSJLvqmuFqiQSOvHDQi4aGWGxanUXrfB6vGwF8kcnbMNgQDCXmXjokRaSHWun4GYWbUO8sVNZrZ934Tt7JH00oMMRGQWn'
+STRIPE_SECRET_KEY = 'sk_test_51O3ACbSJLvqmuFqiluiJqlB0KcV70IutYbf9scWMOHZQjyDEiudgAVduss2Zb1w06Ox6HYCCCYljSNE2cNdn4X7p00aoiC9bAa'
+
+
+NEWS_API_KEY = '6d897a0909b946059f456926072b159a'

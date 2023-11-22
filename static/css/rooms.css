@@ -1,0 +1,37 @@
+.availability-form {
+    margin-top: 25px;
+    padding: 0px 35px;
+}
+
+.custom-bg {
+background-color: #2ec1ac;
+border-color: #2ec1ac;
+}
+
+.custom-bg:hover {
+background-color: #279e8c;
+border-color: #279e8c;
+}
+
+.availability-form {
+margin-top: -50px;
+z-index: 2;
+position: relative;
+}
+
+.h-line {
+width: 150px;
+margin: 0 auto;
+height: 1.7px;
+}
+
+#search-button {
+    background-color: #2ec1ac; 
+    border-color: #2ec1ac;
+}
+
+/* Button style when it's green */
+#search-button.btn-success {
+    background-color: #279e8c; 
+    border-color: #279e8c;
+}

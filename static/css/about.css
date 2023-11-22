@@ -1,0 +1,26 @@
+@media screen and(max-width:575px) {
+    .availability-form {
+        margin-top: 25px;
+        padding: 0px 35px;
+    }
+}
+.availability-form {
+margin-top: -50px;
+z-index: 2;
+position: relative;
+}
+.h-line {
+    width: 150px;
+    margin: 0 auto;
+    height: 1.7px;
+}
+
+.pop:hover {
+    border-top-color: #2ec1ac !important;
+    transform: scale(1.03);
+    transition: all 0.3s;
+}
+
+.box:hover {
+    border-top-color: #2ec1ac !important;
+}

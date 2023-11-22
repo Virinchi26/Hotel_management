@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Weather Information</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <h1>Weather Information</h1>
+    <form method="get">
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Get Weather</button>
+    </form>
+    
+    {% if weather_data %}
+    <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+        <div class="card-header">Weather in {{ form.cleaned_data.location }}</div>
+        <div class="card-body">
+            <h4 class="card-title">Temperature: {{ weather_data.main.temp }}°C</h4>
+            <p class="card-text">Weather: {{ weather_data.weather.0.description }}</p>
+            <p class="card-text">Humidity: {{ weather_data.main.humidity }}%</p>
+        </div>
+    </div>
+    {% endif %}
+
+</body>
+</html>

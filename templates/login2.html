@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Login{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="login-form text-center rounded bg-white shadow overflow-hidden">
+        <form method="POST">
+            {% csrf_token %}
+            <h4 class="bg-dark text-white py-3">Login Panel</h4>
+            <div class="p-4">
+                <div class="mb-3">
+                    <input type="text" required class="form-control shadow-none text-center" name="username" placeholder="UserName"><br>
+                </div>
+                <div class="mb-4">
+                    <input type="password" class="form-control shadow-none text-center" name="password" placeholder="Password"><br>
+                </div>
+                <button name="login" type="submit" class="btn custom-bg shadow-none" >LOGIN </button>
+
+            </div>
+            <div>
+                {% for message in messages %}
+                <h3>{{message}}</h3>
+                {% endfor %}
+            </div>
+        </form>
+    </div>
+    {% endblock %}

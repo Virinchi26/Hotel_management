@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>News</title>
+</head>
+<body>
+    <h1>Hotel News</h1>
+
+    <form action="" method="get">
+        <input type="text" name="search" placeholder="Search News" value="{{ search_query }}">
+        <input type="submit" value="Search">
+    </form>
+
+    <div class="my-3">
+        <div class="card">
+            
+            <div class="card-body">
+
+            </div>
+        </div>
+    </div>
+
+    <ul>
+        {% if search_query %}
+            {% if articles %}
+                {% for article in articles %}
+                    <li>
+                        <h2>{{ article.title }}</h2>
+                        <p>{{ article.description }}</p>
+                        <a href="{{ article.url }}" target="_blank">Read More</a>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <p>No results found for '{{ search_query }}'.</p>
+            {% endif %}
+        {% else %}
+            {% for article in articles %}
+                <li>
+                    <h2>{{ article.title }}</h2>
+                    <p>{{ article.description }}</p>
+                    <a href="{{ article.url }}" target="_blank">Read More</a>
+                </li>
+            {% endfor %}
+        {% endif %}
+    </ul>
+</body>
+</html>
