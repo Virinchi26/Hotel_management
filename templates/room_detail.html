@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Booking {% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/room_detail.css'%}">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+{% endblock %}
+
+{% block content %}
+<h1>Book Now</h1>
+<form action="">
+    <div class="modal-header">
+        <h5 class="modal-title d-flex align-items-center">
+            <i class="bi bi-person-lines-fill fs-3 me-2"></i>Booking Details
+        </h5>
+    </div>
+    <div class="modal-body">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- SLIDERRRRRRRR -->
+                <h1>SLIDE RYAHA</h1>
+            </div>
+            <div class="row">
+                <div class="col-md-6 ps-0 mb-3">
+                    <h5 class="mb-3">{{ room.name }} Name</h5>
+                </div>
+                <div class="col-md-6 p-0 mb-3">
+
+                </div>
+                <div class="col-md-6 ps-0 mb-3">
+                    <div class="features mb-3">
+                        <h6 class="mb-1">Features</h6>
+                        <div class="badge text-bg-light text-dark text-wrap">
+                            <!-- i tag of room heater -->
+                            <img src="{% static 'images/room_detail/room.png' %}" width="40px">
+                            Rooms: {{ room.rooms }}                       
+                         </div>
+                         <br>
+                        <div class="badge text-bg-light text-dark text-wrap">
+                            <!-- i tag of room heater -->
+                            <img src="{% static 'images/room_detail/bathroom.png' %}" width="40px">
+                            Bathrooms: {{ room.bathrooms }}
+                        </div>
+                        <br>
+                        <div class="badge text-bg-light text-dark text-wrap">
+                            <!-- i tag of room heater -->
+                            <img src="{% static 'images/room_detail/balcony.png' %}" width="40px">
+                            Balcony: {{ room.balcony }}
+                        </div>
+                        <br>
+                        <div class="badge text-bg-light text-dark text-wrap">
+                            <!-- i tag of room heater -->
+                            <img src="{% static 'images/room_detail/sofa.png' %}" width="40px">
+                            Sofas: {{ room.sofa }}
+                        </div>
+
+                    
+                    </div>
+                </div>
+                <div class="col-md-6 p-0 mb-3">
+                    <div class="facilities mb-4">
+                        <h6 class="mb-1">Facilities</h6>
+                        {% if room.room_heater %}
+                        <div class="badge text-bg-light text-dark text-wrap">
+                            <!-- i tag of room heater -->
+                            <img src="{% static 'images/facilities/heater.svg' %}" width="40px">
+                            Room Heater
+                        </div>
+                        {% endif %}
+                        <br>
+                        {% if room.ac %}
+                        <div class="badge text-bg-light text-dark text-wrap">
+                            <img src="{% static 'images/facilities/ac.svg' %}" width="40px">
+                            AC
+                        </div>
+                        {% endif %}
+                        <br>
+                        {% if room.wifi %}
+                        <div class="badge text-bg-light text-dark text-wrap">
+                            <img src="{% static 'images/facilities/wifi.svg' %}" width="40px">
+                            Wifi
+                        </div>
+                        {% endif %}
+                        <br>
+                        {% if room.tv %}
+                        <div class="badge text-bg-light text-dark text-wrap">
+                            <img src="{% static 'images/facilities/tv.svg' %}" width="40px">
+                            TV
+                        </div>
+                        {% endif %}
+                        <br>
+                    </div>
+
+
+                </div>
+
+                <div class="col-md-6 p-0 mb-3">
+                    <div class="d-flex">
+
+                    </div>
+
+                </div>
+                <div class="col-md-6 p-0 mb-3">
+                    <div class="d-flex">
+                        <div class="me-3">
+                            <label class="form-label">Adults</label>
+                            <input type="number" name="adults" class="form-control shadow-none">
+                        </div>
+                        <div>
+                            <label class="form-label">Children</label>
+                            <input type="number" name="children" class="form-control shadow-none">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="text-center my-1">
+                    <button type="submit" class="btn btn-dark shadow-none">Book</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}

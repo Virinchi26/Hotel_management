@@ -11,6 +11,12 @@ import stripe
 from django.conf import settings
 from django.shortcuts import render
 
+from django.shortcuts import render,redirect
+from django.contrib.auth.models import User,auth
+from django.contrib import messages
+from .forms import LoginForm
+
+
 # Create your views here.
 def index(request):
     locs = Location.objects.all()
@@ -19,6 +25,11 @@ def index(request):
 def about(request):
     
     return render(request,'about.html')
+
+
+def room_detail(request):
+    
+    return render(request,'room_detail.html')
 
 
 def rooms(request):
@@ -102,42 +113,54 @@ def payment(request):
     return render(request, 'payment_form.html', {'stripe_public_key': settings.STRIPE_PUBLIC_KEY})
 
 
-def login_signup(request):
+def login(request):
     if request.method == 'POST':
-        # If the form is submitted
-        if 'login_form' in request.POST:
-            login_form = AuthenticationForm(request, request.POST)
-            if login_form.is_valid():
-                username = login_form.cleaned_data.get('username')
-                password = login_form.cleaned_data.get('password')
-                user = authenticate(request, username=username, password=password)
-                if user is not None:
-                    login(request, user)
-                    return redirect('home')  # Redirect to the home page or any other page
-        elif 'signup_form' in request.POST:
-            signup_form = UserCreationForm(request.POST)
-            if signup_form.is_valid():
-                user = signup_form.save()
-                login(request, user)
-                return redirect('home')  # Redirect to the home page or any other page
-    else:
-        # If it's a GET request
-        login_form = AuthenticationForm()
-        signup_form = UserCreationForm()
-
-    return render(request, 'login_signup.html', {'login_form': login_form, 'signup_form': signup_form})
-
-
-def signup(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = LoginForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('home')  # Redirect to the home page or any other page
-    else:
-        form = UserCreationForm()
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
 
-    return render(request, 'signup.html', {'form': form})
+            user = auth.authenticate(username=username, password=password)
+
+            if user is not None:
+                auth.login(request, user)
+                return redirect('/')
+            else:
+                messages.error(request, 'Invalid credentials')
+                return redirect('login')
+    else:
+        form = LoginForm()
+
+    return render(request, 'login.html', {'form': form})
+
+
+def logout(request):
+    auth.logout(request)
+    return redirect('/')
+
+from .forms import SignupForm
+
+def register(request):
+    if request.method == 'POST':
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            confirm_password = form.cleaned_data['confirm_password']
+
+            if password == confirm_password:
+                if not User.objects.filter(username=username).exists():
+                    user = User.objects.create_user(username=username, email=email, password=password)
+                    auth.login(request, user)
+                    return redirect('/')
+                else:
+                    form.add_error('username', 'Username is already taken.')
+            else:
+                form.add_error('confirm_password', 'Passwords do not match.')
+    else:
+        form = SignupForm()
+
+    return render(request, 'register.html', {'form': form})
 
     

@@ -21,10 +21,11 @@ from django .conf.urls.static import static
 
 urlpatterns = [
     path('',include('hotel_management.urls')),
-    path('accounts/',include('accounts.urls')),
+    # path('accounts/',include('accounts.urls')),
     path('admin/', admin.site.urls),
     path('weather/', include('weather.urls')),
     path('news/', include('news.urls')),
+    path('oauth/', include('social_django.urls', namespace='social')),
 ]
 
 # adding media files

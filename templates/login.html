@@ -36,7 +36,7 @@
       <div></div>
   </div>
 
-  <button class="google-login-button">
+  <button onclick="window.location.href='{% url "social:begin" "google-oauth2" %}'" class="google-login-button">
     <img src="{% static 'images/google.png' %}" alt="Google Logo" class="google-logo">
     Login with Google
 </button>

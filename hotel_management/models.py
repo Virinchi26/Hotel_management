@@ -1,14 +1,21 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Location(models.Model):
     name= models.CharField(max_length=100)
     desc= models.TextField()
     img= models.ImageField(upload_to='pics') #folder name pics will be created in media folder
 
+class Images(models.Model):
+    name = models.CharField(max_length=100)
+    image_url = models.ImageField(upload_to='pics')
+
+    def __str__(self):
+        return self.name
 
 class Room(models.Model):
     name = models.CharField(max_length=255)
-    image_url = models.ImageField(upload_to='pics')
+    images = models.ManyToManyField(Images)
     
     # features
     rooms = models.IntegerField() 
@@ -27,24 +34,16 @@ class Room(models.Model):
     children = models.IntegerField()
 
     location = models.CharField(max_length=255)
-
+    rating = models.FloatField()
     price_per_night = models.FloatField()
 
+    def __str__(self):
+        return self.name
 
-class AdditionalImage(models.Model):
-    room = models.ForeignKey(Room, related_name='additional_images', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='additional_images/')
-
-
-class RoomImage(models.Model):
+class Booking(models.Model):
+    checkin = models.DateField()
+    checkout = models.DateField()
+    adults = models.IntegerField()
+    children = models.IntegerField()
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
-    image_url = models.ImageField(upload_to='pics')
-
-class RoomRating(models.Model):
-    room = models.ForeignKey(Room, on_delete=models.CASCADE)
-    rating = models.FloatField()
-
-class UserReview(models.Model):
-    room = models.ForeignKey(Room, on_delete=models.CASCADE)
-    review = models.TextField()
-    
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
