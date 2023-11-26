@@ -2,3 +2,75 @@
     display: inline-block;
     margin-right: 10px; /* Adjust the margin as needed */
 }
+
+.room-name{
+    margin-left: 1.5rem;
+    margin-top: 3.5rem;
+}
+
+.features{
+    margin-left: 1.5rem;
+    /* margin-top: 3.5rem; */
+}
+
+
+/* Add this to your CSS file or in a style tag within your HTML */
+.notification {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    width: max-content;
+   border-radius: 6px;
+   background-color: #313e2c;
+   color: #aaec8a;
+   box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
+    transform: translateY(30px);
+    opacity: 0;
+    visibility: hidden;
+    animation: fade-in 3s linear;
+}
+
+.notification_icon{
+    height: 26px;
+    width: 26px;
+    margin-right: 4px;
+}
+
+.notfication_body{
+    display: flex;
+    align-items: row;
+    justify-content: center;
+    padding: 16px 8px;
+}
+
+.notification_progress{
+    position: absolute;
+    left: 4px;
+    bottom: 4px;
+    width: calc(100% - 8px);
+    height: 3px;
+    transform: scaleX(0);
+    transform-origin: left;
+    background: linear-gradient(to right, #313e2c, #aaec8a);    
+    border-radius: inherit;
+    animation: progress 2.5s 0.3s linear;
+}
+
+
+@keyframes fade-in {
+    5% {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+    95% {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}
+
+@keyframes progress{
+    to{
+        transform: scaleX(1);
+    }
+}

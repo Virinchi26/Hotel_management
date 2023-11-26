@@ -1,21 +1,14 @@
-from django.shortcuts import render
-from django.http import HttpResponse
-from .models import Location,Room
+
+from .models import Location,Room, Booking
 from django.core.paginator import Paginator
-# hotel_management/views.py
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
-
-import stripe
-from django.conf import settings
-from django.shortcuts import render
-
-from django.shortcuts import render,redirect
 from django.contrib.auth.models import User,auth
 from django.contrib import messages
 from .forms import LoginForm
-
+from datetime import datetime, timedelta
+from .forms import ContactForm
+from django.http import JsonResponse
 
 # Create your views here.
 def index(request):
@@ -23,19 +16,47 @@ def index(request):
     return render(request,'index.html',{'locs':locs} )
 
 def about(request):
-    
     return render(request,'about.html')
 
+def profile(request):
+    return render(request,'profile.html')
 
-def room_detail(request):
-    
-    return render(request,'room_detail.html')
-
+def room_detail(request, id):
+    room = Room.objects.get(pk=int(id))
+    bookings = Booking.objects.filter(room=room)
+    booked_dates = []
+    for booking in bookings:
+        checkin = booking.checkin
+        checkout = booking.checkout
+        delta = checkout - checkin
+        for i in range(delta.days + 1):
+            day = checkin + timedelta(days=i)
+            booked_dates.append(day.strftime("%Y-%m-%d"))
+    print(booked_dates)
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            user = request.user
+            s = request.POST['daterange']
+            checkin, checkout = s.split(' - ')
+            checkin = checkin.strip()
+            checkout = checkout.strip()
+            checkin = datetime.strptime(checkin, '%m/%d/%Y').date()
+            checkout = datetime.strptime(checkout, '%m/%d/%Y').date()
+            adults = request.POST['adults']
+            children = request.POST['children']
+            room = Room.objects.get(pk=int(id))
+            booking = Booking.objects.create(user=user, room=room, checkin=checkin, checkout=checkout, adults=adults, children=children)
+            print(booking)
+            booking.save()
+            # return redirect('index')
+        else:
+            return redirect('login')
+    return render(request,'room_detail.html', {'room': room, 'booked_dates': booked_dates})
 
 def rooms(request):
     if request.method == 'POST':
         # Token is created using Checkout or Elements!
-        # Get the payment token ID submitted by the form:
+        # Get the payment token ID submitted by the form
         roomheater = False
         ac = False
         wifi = False
@@ -83,35 +104,27 @@ def rooms(request):
 
     return render(request, 'rooms.html', {'rooms': rooms,'room_page': page_obj , 'location_query': location_query})
 
+def profile(request):
+    bookings = Booking.objects.filter(user=request.user)
+    return render(request, 'profile.html', {'bookings': bookings})
+
 def facilities(request):
     return render(request,'facilities.html')
 
 def contactus(request):
-    return render(request,'contactus.html')
+    form_submitted = False
 
-
-stripe.api_key = settings.STRIPE_SECRET_KEY
-
-def payment(request):
     if request.method == 'POST':
-        # Token is created using Checkout or Elements!
-        # Get the payment token ID submitted by the form:
-        token = request.POST['stripeToken'] # Using Flask
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your message was sent successfully!')
+            form_submitted = True
+            form = ContactForm()  # Create a new, empty form instance
+    else:
+        form = ContactForm()
 
-        # Charge the user's card:
-        charge = stripe.Charge.create(
-            amount=1000,  # Amount in cents
-            currency='usd',
-            description='Hotel booking payment',
-            source=token,
-        )
-
-        # You can save the charge information in your database here.
-
-        return render(request, 'payment_success.html')
-    
-    return render(request, 'payment_form.html', {'stripe_public_key': settings.STRIPE_PUBLIC_KEY})
-
+    return render(request, 'contactus.html', {'form': form, 'form_submitted': form_submitted})
 
 def login(request):
     if request.method == 'POST':

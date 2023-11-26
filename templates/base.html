@@ -3,12 +3,12 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock %} | Peninsula</title>
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{% endblock %} | Peninsula</title>
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
   <link
@@ -17,8 +17,8 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-    {% block head %}
-    {% endblock %}
+  {% block head %}
+  {% endblock %}
 </head>
 
 <body class="bg-light">
@@ -31,84 +31,92 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active me-3" aria-current="page" href="{% url 'index' %}">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link me-3" href="{% url 'rooms' %}">Rooms</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link me-3" href="{% url 'facilities' %}">Facilities</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link me-3" href="{% url 'contactus' %}">Contact Us</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'about' %}">About Us</a>
-            </li>
-          </ul>
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active me-3" aria-current="page" href="{% url 'index' %}">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link me-3" href="{% url 'rooms' %}">Rooms</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link me-3" href="{% url 'facilities' %}">Facilities</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link me-3" href="{% url 'contactus' %}">Contact Us</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'about' %}">About Us</a>
+        </li>
+      </ul>
       <div class="d-flex" role="search">
         {% if user.is_authenticated %}
-        <div class="m-3 d-flex align-items-center">
+        <div class="m-3 d-flex align-items-center dropdown">
+         <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           <i class="fa fa-user me-2" aria-hidden="true"></i> <!-- Added me-2 class for spacing -->
           {{ user.username }}
-      </div>
-      <div class="d-flex align-items-center">
+         </a>
+         <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="{% url 'profile' %}">Check Booking</a></li>
+        </ul>
+        </div>
+
+        <div class="d-flex align-items-center">
           <button type="button" class="btn btn-outline-dark shadow-none me-lg-3 me-2" data-bs-toggle="modal"
-              data-bs-target="#logoutModal">
-              <a href="logout" style="text-decoration: none; color: inherit;">Logout</a>
+            data-bs-target="#logoutModal">
+            <a href="{% url 'logout' %}" style="text-decoration: none; color: inherit;">Logout</a>
           </button>
-      </div>
+        </div>
         {% else %}
         <button type="button" class="btn btn-outline-dark shadow-none me-lg-3 me-2" data-bs-toggle="modal"
           data-bs-target="#loginModal">
-          <a href="login" style="text-decoration: none; color: inherit;" >Login</a> 
+          <a href="{% url 'login' %}" style="text-decoration: none; color: inherit;">Login</a>
         </button>
         <button type="button" class="btn btn-outline-dark shadow-none me-lg-3 me-2" data-bs-toggle="modal"
           data-bs-target="#registerModal">
-          
-          <a href="register" style="text-decoration: none; color: inherit;" >  Register</a> 
+
+          <a href="{% url 'register' %}" style="text-decoration: none; color: inherit;"> Register</a>
         </button>
         {% endif %}
       </div>
     </div>
     </div>
   </nav>
-    {% block content %}
-    {% endblock %}
+  {% block content %}
+  {% endblock %}
 
-    <script src="{% static 'js/script.js' %}"></script>
-    <div class="container-fluid bg-white mt-5">
-        <div class="row">
-          <div class="col-lg-4 p-4">
-            <h3 class="h-font fw-bold fs-3 mb-2">Peninsula Hotel</h3>
-            <p>
-              Discover unparalleled luxury at Peninsula Hotel, where every detail is crafted to exceed your expectations. Indulge in opulent accommodations, exquisite dining, and impeccable service. Book your stay now for an unforgettable experience. Your journey to ultimate relaxation begins here.
-            </p>
-          </div>
-          <div class="col-lg-4 p-4">
-            <h5 class="mb-3">Links</h5>
-            <a href="{% url 'index' %}"" class="d-inline-block mb-2 text-dark text-decoration-none">Home</a> <br>
-            <a href="{% url 'rooms' %}" class="d-inline-block mb-2 text-dark text-decoration-none">Rooms</a> <br>
-            <a href="{% url 'facilities' %}" class="d-inline-block mb-2 text-dark text-decoration-none">Facilities</a> <br>
-            <a href="{% url 'contactus' %}" class="d-inline-block mb-2 text-dark text-decoration-none">Contact Us</a> <br>
-            <a href="{% url 'about' %}" class="d-inline-block mb-2 text-dark text-decoration-none">About</a>
-          </div>
-          <div class="col-lg-4 p-4">
-            <h5 class="mb-3">Follow Us</h5>
-            <a href="#" class="d-inline-block text-dark text-decoration-none mb-2">
-              <i class="bi bi-twitter me-1"></i> Twitter</a> <br>
-            <a href="#" class="d-inline-block text-dark text-decoration-none mb-2">
-              <i class="bi bi-instagram me-1"></i> Instagram</a> <br>
-            <a href="#" class="d-inline-block text-dark text-decoration-none">
-              <i class="bi bi-facebook me-1"></i> Facebook</a> <br>
-          </div>
-        </div>
+  <script src="{% static 'js/script.js' %}"></script>
+  <div class="container-fluid bg-white mt-5">
+    <div class="row">
+      <div class="col-lg-4 p-4">
+        <h3 class="h-font fw-bold fs-3 mb-2">Peninsula Hotel</h3>
+        <p>
+          Discover unparalleled luxury at Peninsula Hotel, where every detail is crafted to exceed your expectations.
+          Indulge in opulent accommodations, exquisite dining, and impeccable service. Book your stay now for an
+          unforgettable experience. Your journey to ultimate relaxation begins here.
+        </p>
       </div>
-    <footer>
-        <p class="text-center footer">&copy; 2023 Peninsula. All Rights Reserved</p>
-    </footer>
+      <div class="col-lg-4 p-4">
+        <h5 class="mb-3">Links</h5>
+        <a href="{% url 'index' %}"" class=" d-inline-block mb-2 text-dark text-decoration-none">Home</a> <br>
+        <a href="{% url 'rooms' %}" class="d-inline-block mb-2 text-dark text-decoration-none">Rooms</a> <br>
+        <a href="{% url 'facilities' %}" class="d-inline-block mb-2 text-dark text-decoration-none">Facilities</a> <br>
+        <a href="{% url 'contactus' %}" class="d-inline-block mb-2 text-dark text-decoration-none">Contact Us</a> <br>
+        <a href="{% url 'about' %}" class="d-inline-block mb-2 text-dark text-decoration-none">About</a>
+      </div>
+      <div class="col-lg-4 p-4">
+        <h5 class="mb-3">Follow Us</h5>
+        <a href="#" class="d-inline-block text-dark text-decoration-none mb-2">
+          <i class="bi bi-twitter me-1"></i> Twitter</a> <br>
+        <a href="#" class="d-inline-block text-dark text-decoration-none mb-2">
+          <i class="bi bi-instagram me-1"></i> Instagram</a> <br>
+        <a href="#" class="d-inline-block text-dark text-decoration-none">
+          <i class="bi bi-facebook me-1"></i> Facebook</a> <br>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <p class="text-center footer">&copy; 2023 Peninsula. All Rights Reserved</p>
+  </footer>
 </body>
 
 {% block js %}{% endblock %}
