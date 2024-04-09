@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 import os
 from pathlib import Path
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -143,16 +144,19 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # settings.py
 
-STRIPE_PUBLIC_KEY = os.environ["STRIPE_PUBLIC_KEY"]
-STRIPE_SECRET_KEY = os.environ["STRIPE_SECRET_KEY"]
+env = environ.Env()
+environ.Env.read_env()
+
+STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY")
+STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
 
 
-NEWS_API_KEY = os.environ["NEWS_API_KEY"]
+NEWS_API_KEY = os.environ.get("NEWS_API_KEY")
 
 LOGIN_URL = "login"
 LOGOUT_URL = "logout"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ["SOCIAL_AUTH_GOOGLE_OAUTH2_KEY"]
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ["SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET"]
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get("SOCIAL_AUTH_GOOGLE_OAUTH2_KEY")
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get("SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET")

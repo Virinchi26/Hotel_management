@@ -12,24 +12,23 @@
 <div class="container1">
   <div class="container2">
     <h2>Login</h2>
-    <form method="post" class="c">
+    <form method="post" class="c" id="login-form">
       {% csrf_token %}
       <div style="margin-top: 20px;">
-
         {{ form.username.label_tag }}
-        <br>      
+        <br>
         {{ form.username }}
       </div>
-            
+      <br>
+      <div style="margin-top: 1px;">
+        {{ form.password.label_tag }}
         <br>
-        <div style="margin-top: 1px;">
-          {{ form.password.label_tag }}
-            <br>
-            {{ form.password }}
-        </div>
-            <br>
+        {{ form.password }}
+      </div>
+      <br>
       <button class="login-button" type="submit">Login</button>
     </form>
+
     <div class="or-divider">
       <div></div>
       <div class="or-text">OR</div>
@@ -51,9 +50,14 @@
 
 </div>
 
-
-
-
+<script>
+  // Display error messages from Django form validation
+  {% if form.errors %}
+  {% for error in form.non_field_errors %}
+  alert("{{ error }}");
+  {% endfor %}
+  {% endif %}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.4/lottie.min.js"></script>
 <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 {% endblock %}
