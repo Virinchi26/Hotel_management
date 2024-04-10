@@ -17,5 +17,5 @@ urlpatterns = [
     path('logout',views.logout,name='logout'),
     path('logout',views.logout,name='logout'),
     path('profile',views.profile,name='profile'),
-
+    path('generate-bill/<int:booking_id>/', views.generate_bill, name='generate_bill'),
 ]

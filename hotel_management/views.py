@@ -21,7 +21,9 @@ def about(request):
 
 
 def profile(request):
-    return render(request, "profile.html")
+    bookings = Booking.objects.filter(user=request.user)
+    return render(request, "profile.html", {"bookings": bookings})
+
 
 
 def room_detail(request, id):
@@ -61,9 +63,9 @@ def room_detail(request, id):
             # return redirect('index')
         else:
             return redirect("login")
-    return render(
-        request, "room_detail.html", {"room": room, "booked_dates": booked_dates}
-    )
+    booking.save()
+    return render(request, "room_detail.html", {"room": room, "booked_dates": booked_dates})
+
 
 
 def rooms(request):
@@ -230,3 +232,44 @@ def register(request):
         form = SignupForm()
 
     return render(request, "register.html", {"form": form})
+
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+
+def generate_bill(request, booking_id):
+    booking = Booking.objects.get(id=booking_id)
+    template_path = 'bill_template.html'
+    context = {'booking': booking}
+    # Render the template
+    template = get_template(template_path)
+    html = template.render(context)
+    # Create a PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'inline; filename="bill.pdf"'  # Use 'inline' to display in browser
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    if pisa_status.err:
+        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response
+
+
+
+# from django.http import HttpResponse
+# from django.template.loader import get_template
+# from xhtml2pdf import pisa
+
+# def download_bill(request, booking_id):
+#     booking = Booking.objects.get(id=booking_id)
+#     template_path = 'bill_template.html'
+#     context = {'booking': booking}
+#     # Render the template
+#     template = get_template(template_path)
+#     html = template.render(context)
+#     # Create a PDF
+#     response = HttpResponse(content_type='application/pdf')
+#     response['Content-Disposition'] = 'attachment; filename="bill.pdf"'
+#     pisa_status = pisa.CreatePDF(html, dest=response)
+#     if pisa_status.err:
+#         return HttpResponse('We had some errors <pre>' + html + '</pre>')
+#     return response
+
