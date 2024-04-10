@@ -148,24 +148,46 @@
 
 <body>
     <header class="clearfix">
-        <div id="logo" style="display:flex; justify-content:center; align-items:center;">
-            {#<img src="static/firstapp/images/logo.png" class="brand-logo" width=60 height=60>#} <!--not working-->
-            {#<img src="static/logo.png" class="brand-logo" height="200px">#} <!--not working-->
-            <img src="/Users/pranaysinghvi/Desktop/Website/NGMA/templates/Logo.png" class="brand-logo" width=311px
-                height=52.5px>
-        </div>
-        <h1>INVOICE</h1>
+        <h1>BILL</h1>
         <div id="company" class="clearfix">
-            <div><strong>Peninsula</strong></div>
+            <div><strong>Hotel Peninsula</strong></div>
             <div><a href="mailto:company@example.com">Peninsula@peninsulahotel.com</a></div>
+            
         </div>
         <div id="project">
-            <div><span>CLIENT:</span> {{ user.username }}</div>
+            <div><span>User:</span> {{ user.username }}</div>
             <div><span>Room Name:</span> {{ booking.room.name }}</div>
             <div><span>No. of Rooms:</span>{{ booking.room.rooms }}</div>
+            <div><span>Checkin:</span> {{ booking.checkin }}</div>
+            <div><span>Checkout:</span> {{ booking.checkout }}</div>
+            <div class="facilities">
+                <h6 class="mb-1">Facilities</h6>
+                <ul>
+                    {% if booking.room.room_heater %}
+                    <li>
+                        <div><span>Room Heater</span></div>
+                    </li>
+                    {% endif %}
+                    {% if booking.room.ac %}
+                    <li>
+                        <div><span>AC</span></div>
+                    </li>
+                    {% endif %}
+                    {% if booking.room.wifi %}
+                    <li>
+                        <div><span>Wifi</span></div>
+                    </li>
+                    {% endif %}
+                    {% if booking.room.tv %}
+                    <li>
+                        <div><span>TV</span></div>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
         </div>
         <br>
-        <br>
+        
     </header>
     <div class="table-container" style="overflow-x:auto">
         <table class="table" style="width:100%">
@@ -180,7 +202,7 @@
                 <tr>
                     <td scope="row">No of Adults</td>
                     <td>{{ booking.room.adults }}</td>
-                    
+
 
                 </tr>
                 <tr>
@@ -191,7 +213,7 @@
                 <tr>
                     <td scope="row"></td>
                     <td>TOTAL: </td>
-                    <td>{{amount}}</td>
+                    <td>Rs {{ booking.room.price_per_night }} per Night</td>
 
                 </tr>
             </tbody>
@@ -201,13 +223,6 @@
     <p style="text-align:right; font-size:12px;">*All values are in INR
     <p>
 
-        <!-- <h1>Booking Bill</h1>
-    <p>Room Name: {{ booking.room.name }}</p>
-    <p>Checkin: {{ booking.checkin }}</p>
-    <p>Checkout: {{ booking.checkout }}</p>
-    <p>Price per night: Rs {{ booking.room.price_per_night }}</p>
-    <p>Number of adults: {{ booking.room.adults }} </p>
-    <p>Number of children: {{ booking.room.children }} </p> -->
 
 
     <h1>Hotel Rules and Regulations</h1>
@@ -234,8 +249,6 @@
                 charges.</strong>
         </li>
         <li><strong>Guests must present a valid credit card upon check-in for incidental charges.</strong></li>
-        <li><strong>Modifications to reservations are subject to availability and may incur additional charges.</strong>
-        </li>
         <li><strong>The hotel is not liable for any loss of valuables or personal belongings.</strong></li>
     </ul>
 </body>

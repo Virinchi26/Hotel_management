@@ -233,43 +233,37 @@ def register(request):
 
     return render(request, "register.html", {"form": form})
 
+from django.shortcuts import render
 from django.http import HttpResponse
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 
 def generate_bill(request, booking_id):
+    # Retrieve the booking object
     booking = Booking.objects.get(id=booking_id)
-    template_path = 'bill_template.html'
-    context = {'booking': booking}
+    
+    # Ensure the user is authenticated
+    if request.user.is_authenticated:
+        user = request.user
+    else:
+        user = None
+    
+    # Pass booking and user objects to the template context
+    context = {'booking': booking, 'user': user}
+    
     # Render the template
+    template_path = 'bill_template.html'
     template = get_template(template_path)
     html = template.render(context)
+    
     # Create a PDF
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'inline; filename="bill.pdf"'  # Use 'inline' to display in browser
+    response['Content-Disposition'] = 'inline; filename="bill.pdf"'
     pisa_status = pisa.CreatePDF(html, dest=response)
+    
+    # Check if PDF generation was successful
     if pisa_status.err:
         return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    
     return response
-
-
-
-# from django.http import HttpResponse
-# from django.template.loader import get_template
-# from xhtml2pdf import pisa
-
-# def download_bill(request, booking_id):
-#     booking = Booking.objects.get(id=booking_id)
-#     template_path = 'bill_template.html'
-#     context = {'booking': booking}
-#     # Render the template
-#     template = get_template(template_path)
-#     html = template.render(context)
-#     # Create a PDF
-#     response = HttpResponse(content_type='application/pdf')
-#     response['Content-Disposition'] = 'attachment; filename="bill.pdf"'
-#     pisa_status = pisa.CreatePDF(html, dest=response)
-#     if pisa_status.err:
-#         return HttpResponse('We had some errors <pre>' + html + '</pre>')
-#     return response
 
